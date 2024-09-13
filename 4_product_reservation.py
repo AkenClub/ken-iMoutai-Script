@@ -224,7 +224,7 @@ def get_energy_award(cookie, device_id, mt_version, lat, lng):
         logging.error(f"获取耐力值奖励失败: {e}")
 
 
-# 查询连续申购的天数
+# 查询累计申购的天数
 def get_xmy_applying_reward(cookie, device_id, mt_version, lat, lng):
     url = f"{base_url_game}/xmyApplyingReward/cumulativelyApplyingDays"
     headers = generate_headers(device_id, mt_version, cookie, lat, lng)
@@ -235,27 +235,27 @@ def get_xmy_applying_reward(cookie, device_id, mt_version, lat, lng):
     json_object = json.loads(body)
     if json_object.get("code") != 2000:
         message = json_object.get("message")
-        raise Exception(f"查询连续申购奖励失败: {message}")
+        raise Exception(f"查询累计申购奖励失败: {message}")
     # 奖励是否已经领取
     reward_received = json_object['data']['rewardReceived']
     #  当前申购的天数
     previous_days = json_object['data']['previousDays'] + 1
 
-    logging.info(f"查询连续申购奖励成功: 连续申购天数: {previous_days} 天")
+    logging.info(f"查询累计申购奖励成功: 累计申购天数: {previous_days} 天")
 
     for day in [7, 14, 21, 28]:
         if reward_received.get(str(day)):
             # 如果值 true，则表示已经领取了奖励，继续查询下一个奖励值
             continue
         if previous_days < day:
-            # 如果当前申购奖励 false，而且连续申购的天数小于当前奖励的天数，则无需继续查询
-            logging.info(f"连续申购不满足奖励要求，下一等级：{day}天，继续加油！")
+            # 如果当前申购奖励 false，而且累计申购的天数小于当前奖励的天数，则无需继续查询
+            logging.info(f"累计申购不满足奖励要求，下一等级：{day}天，继续加油！")
             return -1
         # 找到能领取奖励的天数
         return day
 
 
-# 领取连续申购奖励
+# 领取累计申购奖励
 def receive_xmy_applying_reward(cookie, device_id, mt_version, lat, lng,
                                 cumulativelyApplyingDays):
     url = f"{base_url_game}/xmyApplyingReward/receiveCumulativelyApplyingReward"
@@ -269,16 +269,16 @@ def receive_xmy_applying_reward(cookie, device_id, mt_version, lat, lng,
     json_object = json.loads(body)
     if json_object.get("code") != 2000:
         message = json_object.get("message")
-        raise Exception(f"领取连续申购奖励失败: {message}")
+        raise Exception(f"领取累计申购奖励失败: {message}")
 
     # 领取的奖励值
     reward_amount = json_object['data']['rewardAmount']
     logging.info(
-        f"领取连续申购奖励成功: 连续申购天数: {cumulativelyApplyingDays} 天，奖励小茅运: {reward_amount}"
+        f"领取累计申购奖励成功: 累计申购天数: {cumulativelyApplyingDays} 天，奖励小茅运: {reward_amount}"
     )
 
 
-# 查询 & 领取连续申购的小茅运
+# 查询 & 领取累计申购的小茅运
 def get_receive_xmy_applying_reward(cookie, deviceId, mtVersion, lat, lng):
     try:
         cumulativelyApplyingDays = get_xmy_applying_reward(
@@ -287,7 +287,7 @@ def get_receive_xmy_applying_reward(cookie, deviceId, mtVersion, lat, lng):
             receive_xmy_applying_reward(cookie, deviceId, mtVersion, lat, lng,
                                         cumulativelyApplyingDays)
     except Exception as e:
-        logging.error(f"查询 & 领取连续申购的小茅运失败: {e}")
+        logging.error(f"查询 & 领取累计申购的小茅运失败: {e}")
 
 
 # 7 日连续申购领取小茅运奖励
@@ -365,7 +365,7 @@ def start(session_id, user):
 
     # 延迟 3 秒
     time.sleep(3)
-    logging.info("查询 & 领取连续申购的小茅运")
+    logging.info("查询 & 领取累计申购的小茅运")
     get_receive_xmy_applying_reward(user["COOKIE"], user["DEVICE_ID"],
                                     user["MT_VERSION"], user["LAT"],
                                     user["LNG"])
