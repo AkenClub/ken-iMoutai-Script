@@ -109,6 +109,8 @@ if KEN_IMAOTAI_ENV:
 else:
     logging.info("KEN_IMAOTAI_ENV 环境变量未定义")
 
+base_url = "https://h5.moutai519.com.cn/game"
+
 
 # 生成请求头
 def generate_headers(device_id, mt_version, cookie, lat=None, lng=None):
@@ -219,7 +221,7 @@ def log_travel_status(page_data):
 
 # 领取旅行获取的小茅运
 def receive_reward(device_id, lat, lng, cookie, mt_version):
-    url = "https://h5.moutai519.com.cn/game/xmTravel/receiveReward"
+    url = f"{base_url}/xmTravel/receiveReward"
     headers = generate_headers(device_id, mt_version, cookie, lat, lng)
     response = requests.post(url, headers=headers)
     body = response.json()
@@ -230,7 +232,7 @@ def receive_reward(device_id, lat, lng, cookie, mt_version):
 
 # 领取每日首次分享获取耐力
 def share_reward(device_id, lat, lng, cookie, mt_version):
-    url = "https://h5.moutai519.com.cn/game/xmTravel/shareReward"
+    url = f"{base_url}/xmTravel/shareReward"
     headers = generate_headers(device_id, mt_version, cookie, lat, lng)
     response = requests.post(url, headers=headers)
     body = response.json()
@@ -241,7 +243,7 @@ def share_reward(device_id, lat, lng, cookie, mt_version):
 
 # 开始旅行
 def start_travel(device_id, mt_version, cookie):
-    url = "https://h5.moutai519.com.cn/game/xmTravel/startTravel"
+    url = f"{base_url}/xmTravel/startTravel"
     headers = generate_headers(device_id, mt_version, cookie)
     response = requests.post(url, headers=headers)
     body = response.json()
@@ -252,7 +254,7 @@ def start_travel(device_id, mt_version, cookie):
 
 # 查询 可获取小茅运
 def get_xm_travel_reward(device_id, mt_version, cookie):
-    url = "https://h5.moutai519.com.cn/game/xmTravel/getXmTravelReward"
+    url = f"{base_url}/xmTravel/getXmTravelReward"
     headers = generate_headers(device_id, mt_version, cookie)
     response = requests.get(url, headers=headers)
     body = response.json()
@@ -265,7 +267,7 @@ def get_xm_travel_reward(device_id, mt_version, cookie):
 
 # 获取用户数据，查询旅行状态、剩余可领取小茅运数量等
 def get_user_isolation_page_data(device_id, mt_version, cookie):
-    url = "https://h5.moutai519.com.cn/game/isolationPage/getUserIsolationPageData"
+    url = f"{base_url}/isolationPage/getUserIsolationPageData"
     headers = generate_headers(device_id, mt_version, cookie)
     params = {"__timestamp": int(datetime.now().timestamp())}
     response = requests.get(url, headers=headers, params=params)
@@ -304,7 +306,7 @@ def get_user_isolation_page_data(device_id, mt_version, cookie):
 
 # 获取申购耐力值
 def get_energy_award(cookie, device_id, mt_version, lat, lng):
-    url = "https://h5.moutai519.com.cn/game/isolationPage/getUserEnergyAward"
+    url = f"{base_url}/isolationPage/getUserEnergyAward"
     headers = generate_headers(device_id, mt_version, cookie, lat, lng)
     response = requests.post(url, headers=headers)
     body = response.text
@@ -317,7 +319,7 @@ def get_energy_award(cookie, device_id, mt_version, lat, lng):
 
 # 获取本月剩余奖励耐力值
 def get_exchange_rate_info(device_id, mt_version, cookie):
-    url = "https://h5.moutai519.com.cn/game/synthesize/exchangeRateInfo"
+    url = f"{base_url}/synthesize/exchangeRateInfo"
     headers = generate_headers(device_id, mt_version, cookie)
     params = {"__timestamp": int(datetime.now().timestamp())}
     response = requests.get(url, headers=headers, params=params)
