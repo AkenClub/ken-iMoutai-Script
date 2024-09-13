@@ -21,6 +21,8 @@
 - LAT: 用户所在位置的纬度。                           --- 运行 3_retrieve_shop_and_product_info.py 获取
 - LNG: 用户所在位置的经度。                          --- 运行 3_retrieve_shop_and_product_info.py 获取
 
+
+注意：可能会出现“商品ID XXX 申购失败:当前选择的门店不参与本场申购，请选择另外的门店申购”情况，则需要考虑是否要更换店铺。
 """
 
 import datetime
@@ -40,7 +42,7 @@ from notify import send
 # 每日 9:20 开始预约
 '''
 cron: 20 9 * * *
-new Env("i茅台预约")
+new Env("4_预约申购")
 '''
 
 # 创建 StringIO 对象

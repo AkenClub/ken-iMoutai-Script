@@ -39,7 +39,7 @@ from notify import send
 # 9:25、16:25 执行，每日旅行两次应该足够用完耐力值了，可自行修改
 '''
 cron: 25 9-20/7 * * *
-new Env("i茅台旅行")
+new Env("5_旅行相关")
 '''
 
 # 创建 StringIO 对象

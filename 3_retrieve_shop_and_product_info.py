@@ -21,6 +21,10 @@ CITY_NAME = "南宁市"
 # --------------------
 
 # ***** 以下内容不用动 *****
+'''
+cron: 1 1 1 1 *
+new Env("3_查询商品商店信息")
+'''
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
