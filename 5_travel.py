@@ -156,12 +156,8 @@ def travel_reward(device_id, mt_version, cookie, lat, lng):
         raise Exception("当月无可领取奖励，直接结束旅行。")
     logging.info(f"当月可领取小茅运数量：{current_period_can_convert_xmy_num}")
 
-    # 未开始
-    if status == 1:
-        if energy < 100:
-            raise Exception(f"无法旅行，耐力不足100, 当前耐力值:{energy}")
     # 进行中
-    elif status == 2:
+    if status == 2:
         formatted_date = datetime.fromtimestamp(
             end_time / 1000).strftime("%Y-%m-%d %H:%M:%S")
         raise Exception(f"旅行暂未结束,本次旅行结束时间:{formatted_date}")
@@ -190,8 +186,11 @@ def travel_reward(device_id, mt_version, cookie, lat, lng):
         if travel_reward_xmy > current_period_can_convert_xmy_num:
             raise Exception("当月无可领取奖励，当月不再旅行")
 
+    # 如果是未开始状态或者 status 已完成且领取了奖励，则开始新的旅行
     if remain_chance < 1:
         raise Exception("当日旅行次数已耗尽")
+    elif energy < 100:
+        raise Exception(f"无法旅行，耐力不足100, 当前耐力值:{energy}")
     else:
         # 小茅运旅行活动
         start_travel_result = start_travel(device_id, mt_version, cookie)
