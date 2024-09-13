@@ -39,9 +39,9 @@ from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
 from notify import send
 
-# 每日 9:20 开始预约
+# 每日 9:10 开始预约
 '''
-cron: 20 9 * * *
+cron: 10 9 * * *
 new Env("4_预约申购")
 '''
 
