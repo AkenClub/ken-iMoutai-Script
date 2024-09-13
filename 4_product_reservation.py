@@ -117,6 +117,8 @@ if KEN_IMAOTAI_ENV:
 else:
     logging.info("KEN_IMAOTAI_ENV 环境变量未定义")
 
+base_url_game = "https://h5.moutai519.com.cn/game"
+
 
 # 生成请求头
 def generate_headers(device_id, mt_version, cookie, lat=None, lng=None):
@@ -197,28 +199,34 @@ def reserve_product(itemId, shopId, sessionId, userId, token, deviceId,
 
 # 获取申购耐力值
 def get_energy_award(cookie, device_id, mt_version, lat, lng):
-    url = "https://h5.moutai519.com.cn/game/isolationPage/getUserEnergyAward"
-    headers = generate_headers(device_id, mt_version, cookie, lat, lng)
+    try:
+        url = f"{base_url_game}/isolationPage/getUserEnergyAward"
+        headers = generate_headers(device_id, mt_version, cookie, lat, lng)
 
-    response = requests.post(url, headers=headers)
-    body = response.text
+        response = requests.post(url, headers=headers)
+        body = response.text
 
-    json_object = json.loads(body)
-    if json_object.get("code") != 200:
-        message = json_object.get("message")
-        raise Exception(message)
+        json_object = json.loads(body)
+        if json_object.get("code") != 200:
+            message = json_object.get("message")
+            raise Exception(message)
 
-    items = json_object.get("data", {}).get("items", [])
-    if items:
-        item = items[0]
-        return '-'.join([item['goodName'], str(item['count'])])
-    else:
-        raise Exception("未找到耐力值奖励信息")
+        items = json_object.get("data", {}).get("items", [])
+        if items:
+            item = items[0]
+            logging.info(
+                f"获取耐力值奖励成功: {'-'.join([item['goodName'], str(item['count'])])}"
+            )
+        else:
+            raise Exception("未找到耐力值奖励信息")
+
+    except Exception as e:
+        logging.error(f"获取耐力值奖励失败: {e}")
 
 
 # 查询连续申购的天数
 def get_xmy_applying_reward(cookie, device_id, mt_version, lat, lng):
-    url = "https://h5.moutai519.com.cn/game/xmyApplyingReward/cumulativelyApplyingDays"
+    url = f"{base_url_game}/xmyApplyingReward/cumulativelyApplyingDays"
     headers = generate_headers(device_id, mt_version, cookie, lat, lng)
 
     response = requests.post(url, headers=headers)
@@ -250,7 +258,7 @@ def get_xmy_applying_reward(cookie, device_id, mt_version, lat, lng):
 # 领取连续申购奖励
 def receive_xmy_applying_reward(cookie, device_id, mt_version, lat, lng,
                                 cumulativelyApplyingDays):
-    url = "https://h5.moutai519.com.cn/game/xmyApplyingReward/receiveCumulativelyApplyingReward"
+    url = f"{base_url_game}/xmyApplyingReward/receiveCumulativelyApplyingReward"
     headers = generate_headers(device_id, mt_version, cookie, lat, lng)
 
     requestBody = {"cumulativelyApplyingDays": cumulativelyApplyingDays}
@@ -280,6 +288,39 @@ def get_receive_xmy_applying_reward(cookie, deviceId, mtVersion, lat, lng):
                                         cumulativelyApplyingDays)
     except Exception as e:
         logging.error(f"查询 & 领取连续申购的小茅运失败: {e}")
+
+
+# 7 日连续申购领取小茅运奖励
+def receive_7_day_reward(cookie, device_id, mt_version, lat, lng):
+    try:
+        url = f"{base_url_game}/xmyApplyingReward/7DaysContinuouslyApplyingProgress"
+        headers = generate_headers(device_id, mt_version, cookie, lat, lng)
+
+        progress_response = requests.post(url, headers=headers)
+        progress_data = json.loads(progress_response.text)
+        if progress_data.get("code") != 2000:
+            message = progress_data.get("message")
+            raise Exception(f"查询失败: {message}")
+
+        # 当前连续申购天数
+        current_progress = progress_data['data']['previousProgress'] + 1
+        if current_progress < 7:
+            logging.info(f"当前连续申购天数: {current_progress} 天，不满足 7 天奖励要求")
+            return
+
+        # 领取奖励
+        url = f"{base_url_game}/xmyApplyingReward/receive7DaysContinuouslyApplyingReward"
+
+        reward_response = requests.post(url, headers=headers)
+        reward_data = json.loads(reward_response.text)
+        if reward_data.get("code") != 2000:
+            message = reward_data.get("message")
+            raise Exception(f"领取失败: {message}")
+        reward_amount = reward_data['data']['rewardAmount']
+        logging.info(f"领取 7 日连续申购领取小茅运奖励成功，奖励小茅运: {reward_amount}")
+
+    except Exception as e:
+        logging.error(f"7 日连续申购领取小茅运奖励异常: {e}")
 
 
 # 获取 Session ID，每天都会变化
@@ -313,25 +354,27 @@ def start(session_id, user):
                         mtVersion=user["MT_VERSION"],
                         lat=user["LAT"],
                         lng=user["LNG"])
-    logging.info("所有商品预约完成, 5 秒后获取耐力值奖励")
 
-    # 延迟 5 秒
-    time.sleep(5)
+    logging.info("所有商品预约完成, 3 秒后获取耐力值奖励")
+
+    # 延迟 3 秒
+    time.sleep(3)
     logging.info("开始获取耐力值奖励")
-    try:
-        award_result = get_energy_award(user["COOKIE"], user["DEVICE_ID"],
-                                        user["MT_VERSION"], user["LAT"],
-                                        user["LNG"])
-        logging.info(f"获取耐力值奖励成功: {award_result}")
-    except Exception as e:
-        logging.error(f"获取耐力值奖励失败: {e}")
+    get_energy_award(user["COOKIE"], user["DEVICE_ID"], user["MT_VERSION"],
+                     user["LAT"], user["LNG"])
 
-    # 延迟 5 秒
-    time.sleep(5)
-    # 查询 & 领取连续申购的小茅运
+    # 延迟 3 秒
+    time.sleep(3)
+    logging.info("查询 & 领取连续申购的小茅运")
     get_receive_xmy_applying_reward(user["COOKIE"], user["DEVICE_ID"],
                                     user["MT_VERSION"], user["LAT"],
                                     user["LNG"])
+
+    # 延迟 3 秒
+    time.sleep(3)
+    logging.info("查询 & 领取 7 日连续申购领取小茅运")
+    receive_7_day_reward(user["COOKIE"], user["DEVICE_ID"], user["MT_VERSION"],
+                         user["LAT"], user["LNG"])
 
 
 if __name__ == "__main__":
