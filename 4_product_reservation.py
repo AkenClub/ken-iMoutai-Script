@@ -3,7 +3,7 @@
 
 通知：运行结果会调用青龙面板的通知渠道。
 
-配置环境变量：IMAOTAI_ENV
+配置环境变量：KEN_IMAOTAI_ENV
 内容格式为：PHONE_NUMBER$USER_ID$DEVICE_ID$MT_VERSION$PRODUCT_ID_LIST$SHOP_ID$LAT$LNG$TOKEN$COOKIE
 解释：手机号码$用户ID$设备ID$版本号$商品ID列表$店铺ID$纬度$经度$TOKEN$COOKIE
 多个用户时使用 & 连接
@@ -63,18 +63,18 @@ stream_handler = logging.StreamHandler(log_stream)
 logger.addHandler(console_handler)
 logger.addHandler(stream_handler)
 
-# 读取 IMAOTAI_ENV 环境变量
-IMAOTAI_ENV = os.getenv('IMAOTAI_ENV', '')
+# 读取 KEN_IMAOTAI_ENV 环境变量
+KEN_IMAOTAI_ENV = os.getenv('KEN_IMAOTAI_ENV', '')
 
 # 加密 KEY
 ENCRYPT_KEY = "qbhajinldepmucsonaaaccgypwuvcjaa"
 # 加密 IV
 ENCRYPT_IV = "2018534749963515"
 
-# 解析 IMAOTAI_ENV 环境变量并保存到 user 列表
+# 解析 KEN_IMAOTAI_ENV 环境变量并保存到 user 列表
 users = []
-if IMAOTAI_ENV:
-    env_list = IMAOTAI_ENV.split('&')
+if KEN_IMAOTAI_ENV:
+    env_list = KEN_IMAOTAI_ENV.split('&')
     for env in env_list:
         try:
             PHONE_NUMBER, USER_ID, DEVICE_ID, MT_VERSION, PRODUCT_ID_LIST, SHOP_ID, LAT, LNG, TOKEN, COOKIE = env.split(
@@ -105,7 +105,7 @@ if IMAOTAI_ENV:
             else:
                 logging.info(f"用户信息不完整: {user}")
         except Exception as e:
-            logging.info(f"IMAOTAI_ENV 环境变量格式错误: {e}")
+            logging.info(f"KEN_IMAOTAI_ENV 环境变量格式错误: {e}")
 
     logging.info("找到以下用户配置：")
     # 输出用户信息
@@ -113,7 +113,7 @@ if IMAOTAI_ENV:
         logging.info(f"用户 {index + 1}: {user['PHONE_NUMBER']}")
 
 else:
-    logging.info("IMAOTAI_ENV 环境变量未定义")
+    logging.info("KEN_IMAOTAI_ENV 环境变量未定义")
 
 
 # 加密
