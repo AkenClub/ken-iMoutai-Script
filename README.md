@@ -111,9 +111,14 @@
 
 6. **配置通知**
 
-   在脚本管理 - `AkenClub_ken-iMoutai-Script`的`notify.py`，配置 `push_config` 里面的字段，例如配置企业微信机器人，则填写 `QYWX_KEY` 的值即可。
+   在控制面板 - 配置文件 - 右上角确定是 `config.sh` 里，例如配置企业微信机器人，则填写 `QYWX_KEY` 的值即可。
 
-   不需要通知时候内容末尾添加随机句子，可以配置 `HITOKOTO` 为 `False`。
+   不需要通知的内容末尾添加随机句子，可以配置
+   
+   ```sh
+   ## 禁用一言（随机句子）
+   export HITOKOTO="false"
+   ```
 
 
 
