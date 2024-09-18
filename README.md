@@ -128,6 +128,7 @@
 ## 常见问题
 
 1. 缺少依赖，`ModuleNotFoundError: No module named 'Crypto'`
+   
    解决：单独安装 `pycryptodome` 依赖
 
    ```shell
