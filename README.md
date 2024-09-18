@@ -125,6 +125,25 @@
 
 
 
+## 常见问题
+
+1. 缺少依赖，`ModuleNotFoundError: No module named 'Crypto'`
+   解决：单独安装 `pycryptodome` 依赖
+
+   ```shell
+   docker exec -it 青龙容器名 /bin/bash
+   ```
+
+   在容器内使用 pip 安装 pycryptodome：
+
+   ```shell
+   pip install pycryptodome
+   ```
+
+   
+
+
+
 ## 计划
 
 - ~~增加累计申购N天的小茅运检测和领取功能~~*`ad4101c`已完成，需重新拉库*
