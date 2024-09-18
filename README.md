@@ -127,9 +127,9 @@
 
 ## 常见问题
 
-1. 缺少依赖，`ModuleNotFoundError: No module named 'Crypto'`
-   
-   解决：单独安装 `pycryptodome` 依赖
+1. 缺少依赖，`ModuleNotFoundError: No module named 'Crypto'`。
+
+   **解决**：单独安装 `pycryptodome` 依赖
 
    ```shell
    docker exec -it 青龙容器名 /bin/bash
@@ -141,7 +141,11 @@
    pip install pycryptodome
    ```
 
-   
+2. 运行日志显示`申购完成`，但是在 i茅台 APP 上的预约申购页面还是显示 `预约申购` 按钮。
+
+   **解决**：如果继续点击`预约申购`，最后会提示你已经申购的了。
+
+   也可以在 i茅台APP - 我的 - 我的申购单 里面能看到`静候申购结果`。 有小伙伴已经申购成功，证明该方式可行。
 
 
 
