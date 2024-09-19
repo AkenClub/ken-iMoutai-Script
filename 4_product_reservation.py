@@ -103,19 +103,19 @@ if KEN_IMAOTAI_ENV:
                 if len(user['PRODUCT_ID_LIST']) > 0:
                     users.append(user)
                 else:
-                    raise Exception("预约商品列表 - PRODUCT_ID_LIST 值为空，请添加后重试")
+                    raise Exception("🚫 预约商品列表 - PRODUCT_ID_LIST 值为空，请添加后重试")
             else:
-                logging.info(f"用户信息不完整: {user}")
+                logging.info(f"🚫 用户信息不完整: {user}")
         except Exception as e:
-            logging.info(f"KEN_IMAOTAI_ENV 环境变量格式错误: {e}")
+            logging.info(f"🚫 KEN_IMAOTAI_ENV 环境变量格式错误: {e}")
 
     logging.info("找到以下用户配置：")
     # 输出用户信息
     for index, user in enumerate(users):
-        logging.info(f"用户 {index + 1}: {user['PHONE_NUMBER']}")
+        logging.info(f"用户 {index + 1}: 📞 {user['PHONE_NUMBER']}")
 
 else:
-    logging.info("KEN_IMAOTAI_ENV 环境变量未定义")
+    logging.info("🚫 KEN_IMAOTAI_ENV 环境变量未定义")
 
 base_url_game = "https://h5.moutai519.com.cn/game"
 
@@ -145,14 +145,6 @@ def aes_cbc_encrypt(data, key, iv):
 # 预约商品
 def reserve_product(itemId, shopId, sessionId, userId, token, deviceId,
                     mtVersion, lat, lng):
-    # 参数校验
-    if not all([
-            itemId, shopId, sessionId, userId, token, deviceId, mtVersion, lat,
-            lng
-    ]):
-        logging.error("参数不完整，请检查输入参数")
-        return "参数不完整"
-
     mt_k = f'{int(time.time() * 1000)}'
     headers = {
         'User-Agent': 'iOS;16.3;Apple;?unrecognized?',
@@ -189,11 +181,11 @@ def reserve_product(itemId, shopId, sessionId, userId, token, deviceId,
     code = response.json().get('code', 0)
     if code == 2000:
         result = response.json().get('data', {}).get('successDesc', "未知")
-        logging.info(f"商品ID {itemId} 预约成功: {result}")
+        logging.info(f"🛒 商品ID {itemId} ✅ 预约成功: {result}")
         return result
     else:
-        error_msg = '申购失败:' + response.json().get('message', "未知原因")
-        logging.error(f"商品ID {itemId} {error_msg}")
+        error_msg = '🚫 预约失败:' + response.json().get('message', "未知原因")
+        logging.error(f"🛒 商品ID {itemId} {error_msg}")
         return error_msg
 
 
@@ -215,13 +207,13 @@ def get_energy_award(cookie, device_id, mt_version, lat, lng):
         if items:
             item = items[0]
             logging.info(
-                f"获取耐力值奖励成功: {'-'.join([item['goodName'], str(item['count'])])}"
+                f"🎁 获取耐力值奖励成功: {'-'.join([item['goodName'], str(item['count'])])}"
             )
         else:
             raise Exception("未找到耐力值奖励信息")
 
     except Exception as e:
-        logging.error(f"获取耐力值奖励失败: {e}")
+        logging.error(f"🚫 获取耐力值奖励失败: {e}")
 
 
 # 查询累计申购的天数
@@ -235,13 +227,13 @@ def get_xmy_applying_reward(cookie, device_id, mt_version, lat, lng):
     json_object = json.loads(body)
     if json_object.get("code") != 2000:
         message = json_object.get("message")
-        raise Exception(f"查询累计申购奖励失败: {message}")
+        raise Exception(f"🚫 查询累计申购奖励失败: {message}")
     # 奖励是否已经领取
     reward_received = json_object['data']['rewardReceived']
     #  当前申购的天数
     previous_days = json_object['data']['previousDays'] + 1
 
-    logging.info(f"查询累计申购奖励成功: 累计申购天数: {previous_days} 天")
+    logging.info(f"📅 查询累计申购奖励成功: 累计申购天数: {previous_days} 天")
 
     for day in [7, 14, 21, 28]:
         if reward_received.get(str(day)):
@@ -249,7 +241,7 @@ def get_xmy_applying_reward(cookie, device_id, mt_version, lat, lng):
             continue
         if previous_days < day:
             # 如果当前申购奖励 false，而且累计申购的天数小于当前奖励的天数，则无需继续查询
-            logging.info(f"累计申购不满足奖励要求，下一等级：{day}天，继续加油！")
+            logging.info(f"🚫 累计申购不满足奖励要求，下一等级：{day}天，继续加油！")
             return -1
         # 找到能领取奖励的天数
         return day
@@ -274,7 +266,7 @@ def receive_xmy_applying_reward(cookie, device_id, mt_version, lat, lng,
     # 领取的奖励值
     reward_amount = json_object['data']['rewardAmount']
     logging.info(
-        f"领取累计申购奖励成功: 累计申购天数: {cumulativelyApplyingDays} 天，奖励小茅运: {reward_amount}"
+        f"🎁 领取累计申购奖励成功: 📅 累计申购天数: {cumulativelyApplyingDays} 天，奖励小茅运: {reward_amount}"
     )
 
 
@@ -287,7 +279,7 @@ def get_receive_xmy_applying_reward(cookie, deviceId, mtVersion, lat, lng):
             receive_xmy_applying_reward(cookie, deviceId, mtVersion, lat, lng,
                                         cumulativelyApplyingDays)
     except Exception as e:
-        logging.error(f"查询 & 领取累计申购的小茅运失败: {e}")
+        logging.error(f"🚫 查询 & 领取累计申购的小茅运失败: {e}")
 
 
 # 7 日连续申购领取小茅运奖励
@@ -300,12 +292,12 @@ def receive_7_day_reward(cookie, device_id, mt_version, lat, lng):
         progress_data = json.loads(progress_response.text)
         if progress_data.get("code") != 2000:
             message = progress_data.get("message")
-            raise Exception(f"查询失败: {message}")
+            raise Exception(f"🚫 查询 7 日连续申购失败: {message}")
 
         # 当前连续申购天数
         current_progress = progress_data['data']['previousProgress'] + 1
         if current_progress < 7:
-            logging.info(f"当前连续申购天数: {current_progress} 天，不满足 7 天奖励要求")
+            logging.info(f"🚫 当前连续申购天数: {current_progress} 天，不满足 7 天奖励要求")
             return
 
         # 领取奖励
@@ -317,10 +309,10 @@ def receive_7_day_reward(cookie, device_id, mt_version, lat, lng):
             message = reward_data.get("message")
             raise Exception(f"领取失败: {message}")
         reward_amount = reward_data['data']['rewardAmount']
-        logging.info(f"领取 7 日连续申购领取小茅运奖励成功，奖励小茅运: {reward_amount}")
+        logging.info(f"🎁 领取 7 日连续申购领取小茅运奖励成功，奖励小茅运: {reward_amount}")
 
     except Exception as e:
-        logging.error(f"7 日连续申购领取小茅运奖励异常: {e}")
+        logging.error(f"🚫 7 日连续申购领取小茅运奖励异常: {e}")
 
 
 # 获取 Session ID，每天都会变化
@@ -333,7 +325,7 @@ def get_session_id():
     response = requests.get(api_url)
     data = response.json()
     if data["code"] != 2000:
-        raise Exception("获取商品信息失败")
+        raise Exception("🚫 获取 Session ID 失败")
 
     # 解析响应
     sessionId = data["data"]["sessionId"]
@@ -343,7 +335,7 @@ def get_session_id():
 # i茅台~ 启动！
 def start(session_id, user):
     logging.info('--------------------------')
-    logging.info(f"用户：{user['PHONE_NUMBER']}，开始预约商品")
+    logging.info(f"🧾 用户：{user['PHONE_NUMBER']}，开始预约商品")
     for product_id in user["PRODUCT_ID_LIST"]:
         reserve_product(itemId=product_id,
                         shopId=user["SHOP_ID"],
@@ -355,24 +347,24 @@ def start(session_id, user):
                         lat=user["LAT"],
                         lng=user["LNG"])
 
-    logging.info("所有商品预约完成, 3 秒后获取耐力值奖励")
+    logging.info("🎁 所有商品预约完成, 3 秒后获取耐力值奖励")
 
     # 延迟 3 秒
     time.sleep(3)
-    logging.info("开始获取耐力值奖励")
+    logging.info("🏁 开始获取耐力值奖励")
     get_energy_award(user["COOKIE"], user["DEVICE_ID"], user["MT_VERSION"],
                      user["LAT"], user["LNG"])
 
     # 延迟 3 秒
     time.sleep(3)
-    logging.info("查询 & 领取累计申购的小茅运")
+    logging.info("🏁 查询 & 领取累计申购的小茅运")
     get_receive_xmy_applying_reward(user["COOKIE"], user["DEVICE_ID"],
                                     user["MT_VERSION"], user["LAT"],
                                     user["LNG"])
 
     # 延迟 3 秒
     time.sleep(3)
-    logging.info("查询 & 领取 7 日连续申购领取小茅运")
+    logging.info("🏁 查询 & 领取 7 日连续申购领取小茅运")
     receive_7_day_reward(user["COOKIE"], user["DEVICE_ID"], user["MT_VERSION"],
                          user["LAT"], user["LNG"])
 
@@ -383,7 +375,7 @@ if __name__ == "__main__":
         start(session_id, user)
 
     logging.info('--------------------------')
-    logging.info("所有用户预约完成")
+    logging.info(" ✅ 所有用户预约完成")
 
     log_contents = log_stream.getvalue()
     send("i茅台预约日志：", log_contents)
