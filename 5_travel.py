@@ -180,6 +180,8 @@ def travel_reward(device_id, mt_version, cookie, lat, lng):
             # 首次分享获取耐力
             share_result = share_reward(device_id, lat, lng, cookie,
                                         mt_version)
+            # 如果分享成功，则耐力值加 10，用于后续判断是否足够耐力值旅行
+            energy += 10
             logging.info(f"分享奖励结果：{share_result}")
         except Exception as e:
             logging.error(f"分享奖励失败: {e}")
