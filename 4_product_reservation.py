@@ -185,6 +185,12 @@ else:
 base_url_game = "https://h5.moutai519.com.cn/game"
 
 
+# DEBUG 控制日志输出
+def debug_log(message):
+    if DEBUG:
+        logging.info(message)
+
+
 # 生成请求头
 def generate_headers(device_id, mt_version, cookie, lat=None, lng=None):
     headers = {
@@ -431,18 +437,19 @@ def start(user):
     logging.info('--------------------------')
     logging.info(f"🧾 用户：{user['PHONE_NUMBER']}，开始预约商品")
 
+    if user["SHOP_ID"] == "AUTO":
+        logging.info(f"🏁 店铺 ID 为 AUTO，根据店铺模式 {user['SHOP_MODE']} 获取店铺 ID")
+
     for product_id in user["PRODUCT_ID_LIST"]:
         shop_id = user["SHOP_ID"]
 
         # 判断 SHOP_ID 是否为 AUTO，如果是，则根据 SHOP_MODE 获取店铺 ID
         if user["SHOP_ID"] == "AUTO":
-            logging.info(
-                f"🏁 处理商品ID：{product_id}，店铺 ID 为 AUTO，根据店铺模式 {user['SHOP_MODE']} 获取店铺 ID"
-            )
             shop_id = get_shop_id_by_mode(user["LAT"], user["LNG"],
                                           user["SHOP_MODE"], user["PROVINCE"],
                                           user["CITY"], product_id)
-            logging.info(f"--- 🏁 获取店铺 ID 成功，店铺 ID: {shop_id}")
+            logging.info(f"🚩 商品ID：{product_id}，获取店铺 ID（{shop_id}）成功")
+
         reserve_product(itemId=product_id,
                         shopId=shop_id,
                         sessionId=session_id,
@@ -564,11 +571,11 @@ def get_shop_id_by_mode(lat, lng, shop_mode, province_name, city_name,
     # 判断 all_shops_info 是否为空，如果为空，则获取所有店铺信息
     if all_shops_info is None:
         all_shops_info = get_shop_info(province_name, city_name)
-        logging.info(f"--- 🏁 获取本城市（{province_name}-{city_name}）所有店铺信息 成功")
+        debug_log(f"--- 🏁 获取本城市（{province_name}-{city_name}）所有店铺信息 成功")
 
     # 不同的商品 ID 获取到的数量不同，需要重新获取
     shops_by_product_id = get_shop_by_product_id(province_name, product_id)
-    logging.info(f"--- 🏁 获取本省份（{province_name}）指定商品（{product_id}）可以预约的店铺信息 成功")
+    debug_log(f"--- 🏁 获取本省份（{province_name}）指定商品（{product_id}）可以预约的店铺信息 成功")
 
     # 筛选 省份内所有能预约的店铺 在 用户选的城市店铺 中有哪些
     filter_shops = []
@@ -579,13 +586,12 @@ def get_shop_id_by_mode(lat, lng, shop_mode, province_name, city_name,
                 shop_city_copy = shop_city.copy()
                 shop_city_copy["inventory"] = shop_province["inventory"]
                 filter_shops.append(shop_city_copy)
-                if DEBUG:
-                    logging.info(f"--- 🏁 --- 店铺信息: {shop_city_copy}")
+                debug_log(f"--- 🏁 --- 店铺信息: {shop_city_copy}")
                 break
 
     # 根据 SHOP_MODE 是 NEAREST 或 INVENTORY，获取店铺ID
     if shop_mode == "NEAREST":
-        logging.info("--- 🏁 店铺缺货模式：NEAREST（距离最近）")
+        debug_log("--- 🏁 店铺缺货模式：NEAREST（距离最近）")
         # 计算用户位置到店铺的距离，并且按照距离近到远排序，把距离添加到 filter_shops 中
         for shop in filter_shops:
             distance = haversine(float(lat), float(lng), float(shop["lat"]),
@@ -599,14 +605,14 @@ def get_shop_id_by_mode(lat, lng, shop_mode, province_name, city_name,
                     f"--- 🏁 --- 店铺名称: {shop.get('name')}, 店铺ID：{shop.get('shopId')}，距离: {shop.get('distance')} 公里"
                 )
 
-        logging.info(
+        debug_log(
             f"--- 🏁 找到最近的店铺：{filter_shops[0].get('name')}, 店铺ID：{filter_shops[0].get('shopId')}，距离：{filter_shops[0].get('distance')} 公里"
         )
 
     elif shop_mode == "INVENTORY":
-        logging.info("--- 🏁 店铺缺货模式：INVENTORY（库存最多）")
+        debug_log("--- 🏁 店铺缺货模式：INVENTORY（库存最多）")
         filter_shops.sort(key=lambda x: x["inventory"], reverse=True)
-        logging.info(
+        debug_log(
             f"--- 🏁 找到库存最多的店铺：{filter_shops[0].get('name')}, 店铺ID：{filter_shops[0].get('shopId')}，库存：{filter_shops[0].get('inventory')}"
         )
 
