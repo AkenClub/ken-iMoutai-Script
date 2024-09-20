@@ -230,7 +230,7 @@ KEN_IMAOTAI_ENV="13876543210$9988776655$abcd1234-5678-efgh-ijkl-901234567890$1.8
 
 - ~~增加累计申购N天的小茅运检测和领取功能~~  [`ad4101c`](https://github.com/AkenClub/ken-iMoutai-Script/commit/ad4101c51a73f2b7336f600386de85437be46774) 已完成，需重新拉库
 - ~~增加 7 日连续申购领取小茅运奖励功能~~ [`673dda4`](https://github.com/AkenClub/ken-iMoutai-Script/commit/673dda46bdb162c62742775b5c9537bede6499ea) 已完成，需重新拉库
-- ~~增加判断目标店铺不支持某个商品预约时，自动选择可预约的其他店铺~~[81971ad](https://github.com/AkenClub/ken-iMoutai-Script/commit/81971add48f18beab5f5ce15d8fa554afcb6c697) 已完成，需重新拉库。环境变量做了兼容，建议**设置** 自动化选择店铺 相关变量值
+- ~~增加判断目标店铺不支持某个商品预约时，自动选择可预约的其他店铺~~ [81971ad](https://github.com/AkenClub/ken-iMoutai-Script/commit/81971add48f18beab5f5ce15d8fa554afcb6c697) 已完成，需重新拉库。环境变量做了兼容，建议**设置** 自动化选择店铺 相关变量值
 - 增加周末欢乐购
 
 
