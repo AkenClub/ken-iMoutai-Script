@@ -5,9 +5,11 @@
 
 
 配置环境变量：KEN_IMAOTAI_ENV
-内容格式为：PHONE_NUMBER$USER_ID$DEVICE_ID$MT_VERSION$PRODUCT_ID_LIST$SHOP_ID$LAT$LNG$TOKEN$COOKIE
-解释：手机号码$用户ID$设备ID$版本号$商品ID列表$店铺ID$纬度$经度$TOKEN$COOKIE
+内容格式为：PHONE_NUMBER$USER_ID$DEVICE_ID$MT_VERSION$PRODUCT_ID_LIST$SHOP_ID^SHOP_MODE^PROVINCE^CITY$LAT$LNG$TOKEN$COOKIE
+解释：手机号码$用户ID$设备ID$版本号$商品ID列表$店铺ID店铺缺货时自动采用的模式^省份^城市$纬度$经度$TOKEN$COOKIE
 多个用户时使用 & 连接。
+
+说明：^SHOP_MODE^PROVINCE^CITY 为可选
 
 常量。
 - PHONE_NUMBER: 用户的手机号码。                    --- 自己手机号码
@@ -19,6 +21,13 @@
 - COOKIE: 用于会话管理的Cookie。                     --- 运行 2_login.py 获取
 - PRODUCT_ID_LIST: 商品ID列表，表示用户想要预约的商品。--- 运行 3_retrieve_shop_and_product_info.py 获取
 - SHOP_ID: 店铺的唯一标识符。                         --- 运行 3_retrieve_shop_and_product_info.py 获取
+           可设置为 AUTO，则根据 SHOP_MODE 的值来选择店铺 ID。
+- SHOP_MODE：店铺缺货模式，可选值为NEAREST（距离最近）或INVENTORY（库存最多）。设置该值时，需要同时设置 PROVINCE 和 CITY。
+             非必填，但 SHOP_ID 设置 AUTO 时为必填，需要同时设置 SHOP_MODE、PROVINCE 和 CITY。
+- PROVINCE: 用户所在的省份。                          --- 与 3_retrieve_shop_and_product_info.py 填写的省份一致
+            非必填，但 SHOP_MODE 设置为 NEAREST 或 INVENTORY 时为必填。
+- CITY: 用户所在的城市。                              --- 与 3_retrieve_shop_and_product_info.py 填写的城市一致
+            非必填，但 SHOP_MODE 设置为 NEAREST 或 INVENTORY 时为必填。
 - LAT: 用户所在位置的纬度。                           --- 运行 3_retrieve_shop_and_product_info.py 获取
 - LNG: 用户所在位置的经度。                          --- 运行 3_retrieve_shop_and_product_info.py 获取
 
