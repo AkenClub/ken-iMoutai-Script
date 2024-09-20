@@ -107,7 +107,7 @@ if __name__ == "__main__":
         logging.info(f"纬度: {shop['lat']}")
         logging.info(f"经度: {shop['lng']}")
         logging.info("-------------------------")
-    logging.info(f"**** 请自行选择上面一个商店，可以选离你最近的，想要选出货量最多的店，可以上 i茅台APP 查看再选择 ****")
+    logging.info(f"**** 请自行选择上面一个商店 ****")
 
     logging.info("-------------------------")
 
@@ -121,9 +121,12 @@ if __name__ == "__main__":
 
     logging.info("****************************")
     logging.info("记录以下信息用于后续预约：")
-    logging.info(f"店铺 ID - SHOP_ID：对应 shopId 字段")
-    logging.info(f"纬度 - LAT：对应 lat 字段")
-    logging.info(f"经度 - LNG：对应 lng 字段")
+
+    logging.info(f"省份 - PROVINCE：{PROVINCE_NAME}")
+    logging.info(f"城市 - CITY：{CITY_NAME}")
+    logging.info(f"店铺ID - SHOP_ID")
+    logging.info(f"纬度 - LAT，可直接用店铺对应的纬度值 或者 自己实际的纬度值（自行想办法获取）")
+    logging.info(f"经度 - LNG，可直接用店铺对应的经度值 或者 自己实际的经度值（自行想办法获取）")
     logging.info(
-        f"需要预约的商品 ID(对应 itemCode) - PRODUCT_ID_LIST，例如：['10941', '10923', '2478', '10942']"
+        f"需要预约的商品 ID 列表 - PRODUCT_ID_LIST（对应 itemCode），符号都是用英文符号，例如：['10941', '10923', '2478', '10942']"
     )
