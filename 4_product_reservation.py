@@ -302,14 +302,15 @@ def get_energy_award(cookie, device_id, mt_version, lat, lng):
             message = json_object.get("message")
             raise Exception(message)
 
-        items = json_object.get("data", {}).get("items", [])
-        if items:
-            item = items[0]
-            logging.info(
-                f"🎁 获取耐力值奖励成功: {'-'.join([item['goodName'], str(item['count'])])}"
-            )
+        award_rule = json_object.get("data", {}).get("awardRule", [])
+        award_result = ""
+        if award_rule:
+            for item in award_rule:
+                if item and 'goodName' in item and 'count' in item:
+                    award_result += f"{item['goodName']} - {item['count']};"
         else:
-            raise Exception("未找到耐力值奖励信息")
+            award_result += "未找到耐力值奖励信息"
+        logging.info(f"🎁 获得耐力值奖励: {award_result}")
 
     except Exception as e:
         logging.error(f"🚫 获取耐力值奖励失败: {e}")
@@ -624,13 +625,14 @@ def get_shop_id_by_mode(lat, lng, shop_mode, province_name, city_name,
 
 if __name__ == "__main__":
 
-    # 判断当前时间是否是 9:00 到 10:00 期间
-    now = datetime.datetime.now()
-    if now.hour < 9 or now.hour > 10:
-        err_msg = "🚫 当前时间不在 9:00 到 10:00 期间，不执行预约"
-        logger.warning(err_msg)
-        send("i茅台预约日志：", err_msg)
-        exit()
+    if not DEBUG:
+        # 判断当前时间是否是 9:00 到 10:00 期间
+        now = datetime.datetime.now()
+        if now.hour < 9 or now.hour > 10:
+            err_msg = "🚫 当前时间不在 9:00 到 10:00 期间，不执行预约"
+            logger.warning(err_msg)
+            send("i茅台预约日志：", err_msg)
+            exit()
 
     # 生成时间戳
     timestamp_today = str(
