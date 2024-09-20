@@ -204,7 +204,7 @@ KEN_IMAOTAI_ENV="13876543210$9988776655$abcd1234-5678-efgh-ijkl-901234567890$1.8
 
 ## 常见问题
 
-1. 缺少依赖，`ModuleNotFoundError: No module named 'Crypto'`。
+1. 缺少依赖，`ModuleNotFoundError: No module named 'Crypto'`？
 
    **解决**：单独安装 `pycryptodome` 依赖
 
@@ -218,11 +218,26 @@ KEN_IMAOTAI_ENV="13876543210$9988776655$abcd1234-5678-efgh-ijkl-901234567890$1.8
    pip install pycryptodome
    ```
 
-2. 运行日志显示`申购完成`，但是在 i茅台 APP 上的预约申购页面还是显示 `预约申购` 按钮。
+2. 运行日志显示`申购完成`，但是在 i茅台 APP 上的预约申购页面还是显示 `预约申购` 按钮？
 
    **解决**：如果继续点击`预约申购`，最后会提示你已经申购的了。
 
    也可以在 i茅台APP - 我的 - 我的申购单 里面能看到`静候申购结果`。 有小伙伴已经申购成功，证明该方式可行。
+
+3. 定义了环境变量，但是还报错“环境变量未定义”？例如
+
+   ```
+   /ql/data/config/config.sh: line 291: '10941', '10942': syntax error: operand expected (error token is "'10941', '10942'")
+   ## 开始执行... 2024-09-20 14:21:27
+   
+   无推送渠道，请检查通知变量是否正确
+   Traceback (most recent call last):
+     File "/ql/data/scripts/AkenClub_ken-iMoutai-Script/4_product_reservation.py", line 183, in <module>
+       raise Exception(errText)
+   Exception: 🚫 KEN_IMAOTAI_ENV 环境变量未定义
+   ```
+
+   **解决**：在旧版本 2.13.8 能复现，升级青龙版本解决。目前在 v2.17.10、v2.17.11 可用。升级青龙版本需自行检查对其他脚本有无影响。
 
 
 
