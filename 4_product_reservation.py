@@ -307,7 +307,7 @@ def get_energy_award(cookie, device_id, mt_version, lat, lng):
         if award_rule:
             for item in award_rule:
                 if item and 'goodName' in item and 'count' in item:
-                    award_result += f"{item['goodName']} - {item['count']};"
+                    award_result += item['count']
         else:
             award_result += "未找到耐力值奖励信息"
         logging.info(f"🎁 获得耐力值奖励: {award_result}")

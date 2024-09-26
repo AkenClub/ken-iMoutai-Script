@@ -217,12 +217,12 @@ def log_travel_status(page_data):
     energy_reward_value = page_data.get("energy_reward_value")
 
     logging.info(
-        f">>> 🌟当前旅行状态: {'未开始' if status == 1 else '进行中' if status == 2 else '已完成'}"
+        f"🌟当前旅行状态: {'未开始' if status == 1 else '进行中' if status == 2 else '已完成'}"
     )
-    logging.info(f">>> 📅当日剩余旅行次数: {remain_chance}")
-    logging.info(f">>> 💫小茅运: {xmy}")
-    logging.info(f">>> 💪耐力值: {energy}")
-    logging.info(f">>> 🎁未领取的耐力值奖励: {energy_reward_value}")
+    logging.info(f"📅当日剩余旅行次数: {remain_chance}")
+    logging.info(f"💫小茅运: {xmy}")
+    logging.info(f"💪耐力值: {energy}")
+    logging.info(f"🎁未领取的耐力值奖励: {energy_reward_value}")
 
 
 # 领取旅行获取的小茅运
@@ -258,7 +258,7 @@ def start_travel(device_id, mt_version, cookie):
     start_travel_timestamp = body.get("data").get("startTravelTs", 0)
     start_travel_str = datetime.fromtimestamp(
         start_travel_timestamp / 1000).strftime("%Y-%m-%d %H:%M:%S")
-    logging.info(f"✔️ 开始旅行成功，旅行开始时间：{start_travel_str}")
+    logging.info(f"✅ 开始旅行成功，旅行开始时间：{start_travel_str}")
 
 
 # 查询 可获取小茅运
@@ -355,7 +355,7 @@ if __name__ == "__main__":
             log_travel_status(page_data)
         logging.info('--------------------------')
 
-    logging.info("所有用户旅行完成 ✅")
+    logging.info("✅ 所有用户旅行完成")
 
     log_contents = log_stream.getvalue()
     send("i茅台旅行-日志：", log_contents)

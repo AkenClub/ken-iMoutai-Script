@@ -138,7 +138,7 @@ if KEN_IMAOTAI_ENV:
                 'TOKEN': TOKEN.strip(),
                 'COOKIE': COOKIE.strip()
             }
-            # 检查字段是否完整且有值，不检查 SHOP_MODE、PROVICE、CITY 字段（PROVICE 和 CITY 用于 SHOP_MODE 里，而 SHOP_MODE 可选）
+            # 检查字段是否完整且有值，不检查 SHOP_MODE、PROVINCE、CITY 字段（PROVINCE 和 CITY 用于 SHOP_MODE 里，而 SHOP_MODE 可选）
             required_fields = [
                 'PHONE_NUMBER', 'USER_ID', 'DEVICE_ID', 'MT_VERSION',
                 'PRODUCT_ID_LIST', 'SHOP_ID', 'LAT', 'LNG', 'TOKEN', 'COOKIE'
@@ -208,7 +208,7 @@ def check_jwt(jwt_value):
                 )
             else:
                 logging.info(
-                    f"✅ JWT 仍然有效: 过期时间为 {exp_date.strftime('%Y-%m-%d %H:%M:%S')}"
+                    f"✅ JWT 有效: 过期时间为 {exp_date.strftime('%Y-%m-%d %H:%M:%S')}"
                 )
         else:
             logging.warning("⚠️ JWT 中没有 'exp' 字段")
@@ -216,7 +216,7 @@ def check_jwt(jwt_value):
         logging.error("⚠️ JWT 解码失败")
 
 
-# 获取用户信息检测连通性
+# 获取用户信息 测试 API 是否调用成功
 def check_api(cookie, device_id, mt_version, lat, lng):
     global DEBUG
     try:
@@ -231,30 +231,38 @@ def check_api(cookie, device_id, mt_version, lat, lng):
             message = progress_data.get("message")
             raise Exception({message})
         if DEBUG:
-            logging.info(f"✅ 检查真实 API 连通性成功: {progress_data}")
+            logging.info(f"✅ 测试成功: {progress_data}")
             return
-        logging.info("✅ 检查真实 API 连通性成功")
+        logging.info("✅ 测试成功")
     except Exception as e:
-        logging.error(f"🚫 检查真实 API 连通性失败: {e}")
+        logging.error(f"🚫 测试失败: {e}")
+        logging.error(f"⚠️ TOKEN、COOKIE 值真的失效啦！建议更新！否则无法正常预约咯！")
 
 
 if __name__ == "__main__":
+
+    logging.info('--------------------------')
+    logging.info(
+        '💬 TOKEN 有效期的时间不一定准确，以真实 API 连接的结果为准。同时建议临近有效期时手动更新 TOKEN、COOKIE，不用等到过期再去更新。'
+    )
+
     for user in users:
         try:
             logging.info('--------------------------')
             logging.info(f"📞 用户 {user['PHONE_NUMBER']} 开始检查")
-            logging.info(f"🔍 开始检查 JWT 有效期")
+            logging.info(f"🔍 开始检查 TOKEN 有效期")
             check_jwt(user['TOKEN'])
 
-            logging.info(f"🔍 开始检查真实 API 连通性")
+            logging.info(f"🔍 开始测试真实 API 连接")
             check_api(user['COOKIE'], user['DEVICE_ID'], user['MT_VERSION'],
                       user['LAT'], user['LNG'])
         except Exception as e:
             logging.error(
-                f"🚫 用户 {user['PHONE_NUMBER']} 检查失败: {e}，请检查 TOKEN、COOKIE 是否过期")
+                f"🚫 用户 {user['PHONE_NUMBER']} 检查失败: {e}，请手动执行 4、5 脚本，检查 TOKEN、COOKIE 是否过期"
+            )
 
     logging.info('--------------------------')
     logging.info("✅ 所有用户检查完成")
 
     log_contents = log_stream.getvalue()
-    send("i茅台 TOKEN、COOKIE 检查日志：", log_contents)
+    send("i茅台 TOKEN、COOKIE 有效期检查日志：", log_contents)
