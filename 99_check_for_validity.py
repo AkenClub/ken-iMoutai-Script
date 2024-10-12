@@ -201,19 +201,19 @@ def check_jwt(jwt_value):
             # 获取当前时间
             current_date = datetime.datetime.now(datetime.timezone.utc)
 
+            exp_date_str = exp_date.strftime('%Y-%m-%d %H:%M:%S')
+
             # 判断是否过期
             if current_date > exp_date:
                 logging.info(
-                    f"⚠️ JWT 已过期: {exp_date}，请重新执行 第一、二步 脚本获取最新 TOKEN、COOKIE 值"
+                    f"⚠️ TOKEN 已过期: {exp_date_str}，请重新执行 第1、2步 脚本获取最新 TOKEN、COOKIE 值。"
                 )
             else:
-                logging.info(
-                    f"✅ JWT 有效: 过期时间为 {exp_date.strftime('%Y-%m-%d %H:%M:%S')}"
-                )
+                logging.info(f"✅ TOKEN 有效: 过期时间为 {exp_date_str}")
         else:
-            logging.warning("⚠️ JWT 中没有 'exp' 字段")
+            logging.warning("⚠️ TOKEN 中没有 'exp' 字段")
     except jwt.DecodeError:
-        logging.error("⚠️ JWT 解码失败")
+        logging.error("⚠️ TOKEN 解析失败")
 
 
 # 获取用户信息 测试 API 是否调用成功
@@ -231,19 +231,19 @@ def check_api(cookie, device_id, mt_version, lat, lng):
             message = progress_data.get("message")
             raise Exception({message})
         if DEBUG:
-            logging.info(f"✅ 测试成功: {progress_data}")
+            logging.info(f"✅ 测试通过: {progress_data}")
             return
-        logging.info("✅ 测试成功")
+        logging.info("✅ 测试通过")
     except Exception as e:
-        logging.error(f"🚫 测试失败: {e}")
-        logging.error(f"⚠️ TOKEN、COOKIE 值真的失效啦！建议更新！否则无法正常预约咯！")
+        logging.error(f"🚫 测试不通过: {e}")
+        logging.error(f"⚠️ TOKEN、COOKIE 值真的失效啦！建议及时更新！否则无法正常预约和旅行咯！")
 
 
 if __name__ == "__main__":
 
     logging.info('--------------------------')
     logging.info(
-        '💬 TOKEN 有效期的时间不一定准确，以真实 API 连接的结果为准。同时建议临近有效期时手动更新 TOKEN、COOKIE，不用等到过期再去更新。'
+        '💬 TOKEN 有效期时间不一定准确，一般上下浮动 6 小时，以真实 API 连接的结果为准。同时建议临近有效期时手动更新 TOKEN、COOKIE，不用等到过期再去更新。'
     )
 
     for user in users:
@@ -258,7 +258,7 @@ if __name__ == "__main__":
                       user['LAT'], user['LNG'])
         except Exception as e:
             logging.error(
-                f"🚫 用户 {user['PHONE_NUMBER']} 检查失败: {e}，请手动执行 4、5 脚本，检查 TOKEN、COOKIE 是否过期"
+                f"🚫 用户 {user['PHONE_NUMBER']} 检查异常: {e}，请手动执行 4、5 脚本，检查 TOKEN、COOKIE 是否过期"
             )
 
     logging.info('--------------------------')
