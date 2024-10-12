@@ -12,8 +12,13 @@ import re
 # ------ 填写以下 1 个变量值 --------
 
 # 填写手机号码，收到验证码后在 login.py 中填写验证码
-PHONE_NUMBER = ''
+PHONE_NUMBER = ""
+# --------------------
 
+# -------- 非必填 ------------
+# 设备 ID，留空则自动生成；
+# 若是想要保留之前的设备 ID，可以在这里填写之前的值，则不会生成新的设备 ID。
+DEVICE_ID_DEFAULT = ""
 # --------------------
 '''
 cron: 1 1 1 1 *
@@ -29,6 +34,8 @@ SALT = "2af72f100c356273d46284f6fd1dfc08"
 
 
 def get_device_id():
+    if DEVICE_ID_DEFAULT:
+        return DEVICE_ID_DEFAULT
     return str(uuid.uuid4())
 
 
