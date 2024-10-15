@@ -39,8 +39,8 @@ from datetime import datetime
 import logging
 import os
 import ast
-import time
 import io
+import re
 
 from notify import send
 
@@ -80,8 +80,11 @@ if KEN_IMAOTAI_ENV:
     env_list = KEN_IMAOTAI_ENV.split('&')
     for env in env_list:
         try:
-            PHONE_NUMBER, USER_ID, DEVICE_ID, MT_VERSION, PRODUCT_ID_LIST, SHOP_ID, LAT, LNG, TOKEN, COOKIE = env.split(
-                '$')
+            # 使用 re.split() 分割字符串，支持 '#' 和 '$'
+            split_values = re.split(r'[#$]', env)
+
+            PHONE_NUMBER, USER_ID, DEVICE_ID, MT_VERSION, PRODUCT_ID_LIST, SHOP_ID, LAT, LNG, TOKEN, COOKIE = split_values
+
             user = {
                 'PHONE_NUMBER': PHONE_NUMBER.strip(),
                 'USER_ID': USER_ID.strip(),

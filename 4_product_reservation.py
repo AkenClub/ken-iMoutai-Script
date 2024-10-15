@@ -42,6 +42,7 @@ import os
 import ast
 import io
 import math
+import re
 
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
@@ -97,8 +98,10 @@ if KEN_IMAOTAI_ENV:
     env_list = KEN_IMAOTAI_ENV.split('&')
     for env in env_list:
         try:
-            PHONE_NUMBER, USER_ID, DEVICE_ID, MT_VERSION, PRODUCT_ID_LIST, SHOP_INFO, LAT, LNG, TOKEN, COOKIE = env.split(
-                '$')
+            # 使用 re.split() 分割字符串，支持 '#' 和 '$'
+            split_values = re.split(r'[#$]', env)
+
+            PHONE_NUMBER, USER_ID, DEVICE_ID, MT_VERSION, PRODUCT_ID_LIST, SHOP_INFO, LAT, LNG, TOKEN, COOKIE = split_values
 
             SHOP_MODE = ''
             PROVINCE = ''
