@@ -6,6 +6,8 @@
 通知：运行结果会调用青龙面板的通知渠道。
 
 配置环境变量：KEN_IMAOTAI_ENV
+-- 在旧版本青龙（例如 v2.13.8）中，使用 $ 作为分隔符时会出现解析环境变量失败，此时可以把 `$` 分隔符换为 `#` 作为分隔符。
+-- 📣 怕出错？**建议直接使用 `#` 作为分隔符即可** (2024-10-15 更新支持)。
 内容格式为：PHONE_NUMBER$USER_ID$DEVICE_ID$MT_VERSION$PRODUCT_ID_LIST$SHOP_ID^SHOP_MODE^PROVINCE^CITY$LAT$LNG$TOKEN$COOKIE
 解释：手机号码$用户ID$设备ID$版本号$商品ID列表$店铺ID店铺缺货时自动采用的模式^省份^城市$纬度$经度$TOKEN$COOKIE
 多个用户时使用 & 连接
