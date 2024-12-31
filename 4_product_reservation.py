@@ -449,25 +449,28 @@ def start(user):
     for product_id in user["PRODUCT_ID_LIST"]:
         shop_id = user["SHOP_ID"]
 
-        # 判断 SHOP_ID 是否为 AUTO，如果是，则根据 SHOP_MODE 获取店铺 ID
-        if user["SHOP_ID"] == "AUTO":
-            shop_id = get_shop_id_by_mode(user["LAT"], user["LNG"],
-                                          user["SHOP_MODE"], user["PROVINCE"],
-                                          user["CITY"], product_id)
-            logging.info(f"🚩 商品ID：{product_id}，获取店铺 ID（{shop_id}）成功")
+        try:
+            # 判断 SHOP_ID 是否为 AUTO，如果是，则根据 SHOP_MODE 获取店铺 ID
+            if user["SHOP_ID"] == "AUTO":
+                shop_id = get_shop_id_by_mode(user["LAT"], user["LNG"],
+                                              user["SHOP_MODE"], user["PROVINCE"],
+                                              user["CITY"], product_id)
+                logging.info(f"🚩 商品ID：{product_id}，获取店铺 ID（{shop_id}）成功")
 
-        reserve_product(itemId=product_id,
-                        shopId=shop_id,
-                        sessionId=session_id,
-                        userId=user["USER_ID"],
-                        token=user["TOKEN"],
-                        deviceId=user["DEVICE_ID"],
-                        mtVersion=user["MT_VERSION"],
-                        lat=user["LAT"],
-                        lng=user["LNG"],
-                        shop_mode=user["SHOP_MODE"],
-                        province=user["PROVINCE"],
-                        city=user["CITY"])
+            reserve_product(itemId=product_id,
+                            shopId=shop_id,
+                            sessionId=session_id,
+                            userId=user["USER_ID"],
+                            token=user["TOKEN"],
+                            deviceId=user["DEVICE_ID"],
+                            mtVersion=user["MT_VERSION"],
+                            lat=user["LAT"],
+                            lng=user["LNG"],
+                            shop_mode=user["SHOP_MODE"],
+                            province=user["PROVINCE"],
+                            city=user["CITY"])
+        except Exception as e:
+            logging.error(f"🚫 预约商品ID {product_id} 失败: {e}")
 
     logging.info("🎁 所有商品预约完成, 3 秒后获取耐力值奖励")
 
@@ -529,6 +532,10 @@ def get_shop_by_product_id(province_name, product_id):
 
     api_url = f"https://static.moutai519.com.cn/mt-backend/xhr/front/mall/shop/list/slim/v3/{session_id}/{province_name}/{product_id}/{timestamp_today}"
     response = requests.get(api_url)
+
+    if 404 == response.status_code:
+        raise Exception(f"🚫 请求的资源未找到（404错误），请求的城市：{province_name}，商品ID：{product_id}，请检查这两个值是否正确。")
+    
     data = response.json()
 
     if data["code"] != 2000:
@@ -595,6 +602,10 @@ def get_shop_id_by_mode(lat, lng, shop_mode, province_name, city_name,
                 debug_log(f"--- 🏁 --- 店铺信息: {shop_city_copy}")
                 break
 
+    # 返回店铺ID，如果 filter_shops 为空，则返回异常
+    if 0 == len(filter_shops):
+        raise Exception(f"--- 🚫 没有找到可以预约的店铺，商品ID：{product_id}，请到 i茅台 APP 检查该商品是否可以预约。")
+
     # 根据 SHOP_MODE 是 NEAREST 或 INVENTORY，获取店铺ID
     if shop_mode == "NEAREST":
         debug_log("--- 🏁 店铺缺货模式：NEAREST（距离最近）")
@@ -622,9 +633,6 @@ def get_shop_id_by_mode(lat, lng, shop_mode, province_name, city_name,
             f"--- 🏁 找到库存最多的店铺：{filter_shops[0].get('name')}, 店铺ID：{filter_shops[0].get('shopId')}，库存：{filter_shops[0].get('inventory')}"
         )
 
-    # 返回店铺ID，如果 filter_shops 为空，则返回异常
-    if len(filter_shops) == 0:
-        raise Exception("--- 🚫 没有找到可以预约的店铺")
     return filter_shops[0]["shopId"]
 
 
