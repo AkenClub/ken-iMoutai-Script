@@ -1,5 +1,5 @@
 """
-98、检查申购结果
+98、查询申购结果
 
 *** 需要安装依赖 PyJWT ***
 
@@ -52,10 +52,10 @@ load_dotenv()
 
 from notify import send
 
-# 每日 18:05 定时检查并通知
+# 每日 18:05 定时查询并通知
 '''
 cron: 05 18 * * *
-new Env("98_检查申购结果")
+new Env("98_查询申购结果")
 '''
 
 # 创建 StringIO 对象
@@ -196,7 +196,7 @@ def generate_headers(device_id, mt_version, token):
     return headers
 
 
-# 检查申购结果
+# 查询申购结果
 def check_reservation_result( token, device_id, mt_version):
     global DEBUG
     try:
@@ -243,7 +243,7 @@ def check_reservation_result( token, device_id, mt_version):
                     f"🍺 {session_name}[{item_id}] {item_name}：{status_text}。")
 
     except Exception as e:
-        logging.error(f"🚫 检查申购结果失败: {e}")
+        logging.error(f"🚫 查询申购结果失败: {e}")
 
 
 if __name__ == "__main__":
@@ -253,16 +253,16 @@ if __name__ == "__main__":
     for user in users:
         try:
             logging.info('--------------------------')
-            logging.info(f"📞 用户 {user['PHONE_NUMBER']} 开始检查申购结果")
+            logging.info(f"📞 用户 {user['PHONE_NUMBER']} 开始查询申购结果")
 
             check_reservation_result(user['TOKEN'],
                                      user['DEVICE_ID'], user['MT_VERSION'])
         except Exception as e:
             logging.error(
-                f"🚫 用户 {user['PHONE_NUMBER']} 检查异常: {e}，请到 App 上查看申购结果。")
+                f"🚫 用户 {user['PHONE_NUMBER']} 查询异常: {e}，请到 App 上查看申购结果。")
 
     logging.info('--------------------------')
-    logging.info("✅ 所有用户检查完成")
+    logging.info("✅ 所有用户查询完成")
 
     log_contents = log_stream.getvalue()
-    send("i茅台 检查申购结果日志：", log_contents)
+    send("i茅台 查询申购结果日志：", log_contents)
