@@ -46,10 +46,6 @@ import io
 import logging
 import re
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
 from notify import send
 
 # 每日 18:05 定时查询并通知
