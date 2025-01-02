@@ -84,7 +84,7 @@ logger.addHandler(stream_handler)
 timestamp_today = None
 
 # 调试模式
-DEBUG = True
+DEBUG = False
 
 # 读取 KEN_IMAOTAI_ENV 环境变量
 KEN_IMAOTAI_ENV = os.getenv('KEN_IMAOTAI_ENV', '')
