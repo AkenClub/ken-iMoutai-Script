@@ -49,7 +49,7 @@ def get_item_info():
     item_list = data["data"]["itemList"]
     result = [{
         "itemCode": item["itemCode"],
-        "title": item.get("title", "未知商品，请到 APP 自行查看")  # 如果title不存在，则使用"无标题"
+        "title": item.get("title", f"未知商品，可结合该商品图片链接来判断：{item.get('pictureV2', '无图片信息')}，同时到 APP 核实。")
     } for item in item_list]
 
     return {"sessionId": sessionId, "itemList": result}
