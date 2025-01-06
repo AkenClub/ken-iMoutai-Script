@@ -49,7 +49,7 @@ def get_item_info():
     item_list = data["data"]["itemList"]
     result = [{
         "itemCode": item["itemCode"],
-        "title": item["title"]
+        "title": item.get("title", "未知商品，请到 APP 自行查看")  # 如果title不存在，则使用"无标题"
     } for item in item_list]
 
     return {"sessionId": sessionId, "itemList": result}
@@ -112,7 +112,11 @@ if __name__ == "__main__":
     logging.info("-------------------------")
 
     # 获取可以预约的商品信息
-    result = get_item_info()
+    try:
+        result = get_item_info()
+    except Exception as e:
+        logging.error(f"获取商品信息失败：{str(e)}")
+        raise
     logging.info(
         f"获取到 SessionId(可以理解为申购活动批次，每天都会变化，一般+1): {result['sessionId']}")
     for item in result['itemList']:
