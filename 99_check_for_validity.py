@@ -49,9 +49,9 @@ import re
 
 from notify import send
 
-# 每日 8/20:58 定时检查并通知
+# 每日 18:05 定时检查并通知
 '''
-cron: 58 8,20 * * *
+cron: 05 18 * * *
 new Env("99_检查 TOKEN、COOKIE 有效期")
 '''
 
