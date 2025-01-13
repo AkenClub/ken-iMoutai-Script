@@ -80,7 +80,7 @@
 
 4. **预约商品**
 
-   每日 9:10 开始预约，并根据青龙面板的通知渠道进行通知。请运行 `4_reserve_product.py` 脚本。
+   每日 9:10 开始预约，并根据青龙面板的通知渠道进行通知。对应 `4_reserve_product.py` 脚本。
 
    - **配置环境变量 `KEN_IMAOTAI_ENV`：**
 
@@ -138,7 +138,7 @@
    
 5. **旅行 & 获取小茅运、首次分享奖励**
 
-   每日 9: 12 执行一次旅行任务。请运行 `5_travel.py` 脚本。
+   每日 9: 12 执行一次旅行任务。对应 `5_travel.py` 脚本。
 
    - **配置环境变量 `KEN_IMAOTAI_ENV`：同上**
 
@@ -172,6 +172,7 @@
 
 
 ## 环境变量示例
+**注意：编辑变量弹窗里，`名称`的输入框内填固定值**：KEN_IMAOTAI_ENV，**`值`的输入框填真实信息**：13312345678$..$..。下方示例中只展示`值`部分。
 
 1. 使用 `指定店铺ID` + `NEAREST` 模式自动选择距离最近的店铺
 
@@ -180,7 +181,7 @@
    **注意**：设置 SHOP_MODE 为  NEAREST 值后，需要**同时设置** 省份(PROVINCE) 和 城市(CITY) 的值
 
    ```
-   KEN_IMAOTAI_ENV="13812345678$9876543210$abcd1234-5678-90ef-ghij-klmn01234567$1.8.0$['12345', '54321']$45678^NEAREST^北京市^北京市$39.904202$116.407394$eyJhbGciOiJIUzI1$eyJzZXNzaW9uX2lk"
+   13812345678$9876543210$abcd1234-5678-90ef-ghij-klmn01234567$1.8.0$['12345', '54321']$45678^NEAREST^北京市^北京市$39.904202$116.407394$eyJhbGciOiJIUzI1$eyJzZXNzaW9uX2lk
    ```
 
    **说明**：此配置运行时先使用用户指定的店铺 ID `45678`预约，若商品支持在该店铺预约，则直接使用该店铺预约；若该店铺不支持预约这个商品，会根据用户所在位置北京市，自动选择距离最近的店铺进行商品预订。
@@ -190,7 +191,7 @@
    **注意**：设置 SHOP_MODE 为  NEAREST 值后，需要**同时设置** 省份(PROVINCE) 和 城市(CITY) 的值
 
    ```
-   KEN_IMAOTAI_ENV="13812345678$9876543210$abcd1234-5678-90ef-ghij-klmn01234567$1.8.0$['12345', '54321']$AUTO^NEAREST^北京市^北京市$39.904202$116.407394$eyJhbGciOiJIUzI1$eyJzZXNzaW9uX2lk"
+   13812345678$9876543210$abcd1234-5678-90ef-ghij-klmn01234567$1.8.0$['12345', '54321']$AUTO^NEAREST^北京市^北京市$39.904202$116.407394$eyJhbGciOiJIUzI1$eyJzZXNzaW9uX2lk
    ```
 
    **说明**：该配置会根据用户所在位置北京市，自动选择距离最近的店铺进行商品预订。
@@ -202,7 +203,7 @@
    **注意**：设置 SHOP_MODE 为  INVENTORY 值后，需要**同时设置** 省份(PROVINCE) 和 城市(CITY) 的值
 
    ```
-   KEN_IMAOTAI_ENV="13987654321$1029384756$abcd-1234-efgh-5678-ijkl90123456$1.8.1$['98765', '56789']$AUTO^INVENTORY^上海市^上海市$31.230391$121.473701$eyJzZXNzaW9uIjoxMjM0$eyJ1c2VyX2Nvb2tpZQ"
+   13987654321$1029384756$abcd-1234-efgh-5678-ijkl90123456$1.8.1$['98765', '56789']$AUTO^INVENTORY^上海市^上海市$31.230391$121.473701$eyJzZXNzaW9uIjoxMjM0$eyJ1c2VyX2Nvb2tpZQ
    ```
 
    **说明**：此配置在上海市自动选择库存最多的店铺来完成预订。
@@ -214,7 +215,7 @@
    **注意**：可能会出现“商品ID XXX 申购失败:当前选择的门店不参与本场申购，请选择另外的门店申购”情况，建议设置 SHOP_MODE、PROVINCE  和 CITY 值，在店铺缺货时根据指定模式自动选择店铺。
 
    ```
-   KEN_IMAOTAI_ENV="13656789012$1122334455$1234abcd-5678-efgh-9012-ijkl34567890$1.9.0$['11223']$45678$22.543096$114.057865$eyJzdG9yZV9jb29raWVfZGF0YQ$eyJ0b2tlbiI6"
+   13656789012$1122334455$1234abcd-5678-efgh-9012-ijkl34567890$1.9.0$['11223']$45678$22.543096$114.057865$eyJzdG9yZV9jb29raWVfZGF0YQ$eyJ0b2tlbiI6
    ```
 
    **说明**：此配置使用用户指定的店铺 ID `45678`，无自动选择店铺。
@@ -226,7 +227,7 @@
    使用 **&** 连接。
 
    ```
-   KEN_IMAOTAI_ENV="13876543210$9988776655$abcd1234-5678-efgh-ijkl-901234567890$1.8.2$['10999']$AUTO^INVENTORY^广东省^广州市$23.129163$113.264435$eyJzaWduZWRfY29va2ll$eyJ0b2tlbiIgY2hlY2s&13965432108$7766554433$dcba4321-8765-ghij-klmn-098765432109$1.9.0$['10500']$45678^NEAREST^江苏省^南京市$32.060255$118.796877$eyJ1c2VyX2Nvb2tpZQ$eyJvcGVuX3Nlc3Npb25fa2V5"
+   13876543210$9988776655$abcd1234-5678-efgh-ijkl-901234567890$1.8.2$['10999']$AUTO^INVENTORY^广东省^广州市$23.129163$113.264435$eyJzaWduZWRfY29va2ll$eyJ0b2tlbiIgY2hlY2s&13965432108$7766554433$dcba4321-8765-ghij-klmn-098765432109$1.9.0$['10500']$45678^NEAREST^江苏省^南京市$32.060255$118.796877$eyJ1c2VyX2Nvb2tpZQ$eyJvcGVuX3Nlc3Npb25fa2V5
    ```
 
    **说明**：该配置包含**两个**用户的信息：第一个用户在广东省广州市使用 `AUTO` +  `INVENTORY` 模式自动选择库存最多的店铺；第二个用户在江苏省南京市指定店铺 ID `45678`，使用 `NEAREST` 模式选择距离最近的店铺。
@@ -282,6 +283,10 @@
 
    **解决：**已知 1.7.2 版本在 24-10-30 开始报错。错误代码 4820 一般是版本号过低，对应 MT_VERSION 变量值。可以执行第一步获取最新的版本号，最好重新执行第一二步把 Token 等信息一同更新，之后重新执行预约脚本即可。
 
+5. 运行脚本返回 [ianus-token-auth] bad token; invalid signature 错误？
+
+   **解决：** 检查环境变量是否设置正确。出现该错误一般是因为 `值` 填了 KEN_IMAOTAI_ENV="13312345678$..$.."，脚本解析环境变量时 COOKIE 部分多了一个 `"`，导致报错。去除KEN_IMAOTAI_ENV=""即可，`值` 只填写真实获取到的数值就行。
+
 
 
 
@@ -293,6 +298,15 @@
 - ~~增加周末欢乐购~~ [0df36c9](https://github.com/AkenClub/ken-iMoutai-Script/commit/0df36c9d7a85b0f05c88e5b6b68976f0ce843190) 已完成，需重新拉库。沿用日常预约的环境变量，无需额外设置
 - ~~增加2025年蛇年茅台1月活动~~  [bcfd9cb](https://github.com/AkenClub/ken-iMoutai-Script/commit/bcfd9cb4332ef8505cbe689e0295b62d0ab796ea) 已完成，需重新拉库。
 - ~~增加查询申购结果~~  [31e850d](https://github.com/AkenClub/ken-iMoutai-Script/commit/31e850d8878e099eca4d15343f03845e03bb2952) 已完成，需重新拉库。
+
+
+
+## 特别说明
+
+1. 涉及更新了运行时间的任务，需要删除订阅时勾选`同时删除关联任务和脚本`，之后重新设置和运行订阅源，才能让新的运行时间生效。见 [qinglong issues #2622](https://github.com/whyour/qinglong/issues/2622#issuecomment-2585735517)
+   - [1334aa6](https://github.com/AkenClub/ken-iMoutai-Script/commit/1334aa6e8023259400338ebb13e8182b18aab0af)：修改了 token 有效期检测和旅行一天两次运行 => 一天一次
+
+
 
 
 ## 参考与致谢
