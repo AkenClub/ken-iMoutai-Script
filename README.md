@@ -23,13 +23,16 @@
 > **青龙版本**：**正式版 v2.17.10**
 
 
-## 环境变量生成助手
+## 环境变量生成
+### 方式 1：环境变量生成助手
+需要自己部署，支持 docker。
 项目地址：https://github.com/AkenClub/iMoutaiEnvGenerator
 
-![首页界面](https://raw.githubusercontent.com/AkenClub/iMoutaiEnvGenerator/main/src/assets/md/step-1.png)
+![首页界面](https://raw.githubusercontent.com/AkenClub/iMoutaiEnvGenerator/main/src/assets/md/img_home.png)
 
 
-## 使用方法
+### 方式 2：手动生成
+直接在青龙面板中修改**脚本中的**变量值进行调试即可，免部署。
 
 > 第 1、2、3 步都是修改**脚本里面**开头的变量值，然后手动运行一下，查看日志并且记录所需的数据。
 >
