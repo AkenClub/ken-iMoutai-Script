@@ -119,9 +119,9 @@ if KEN_IMAOTAI_ENV:
                         )
                     SHOP_ID, SHOP_MODE, PROVINCE, CITY = parts
                     # 检测 SHOP_MODE 是否为 NEAREST 或 INVENTORY
-                    if SHOP_MODE not in ['NEAREST', 'INVENTORY']:
+                    if SHOP_MODE not in ['NEAREST', 'INVENTORY', '']:
                         raise Exception(
-                            "🚫 店铺缺货模式值错误，请检查 SHOP_MODE 值是否为 NEAREST（<默认> 距离最近） 或 INVENTORY（库存最多）"
+                            "🚫 店铺缺货模式值错误，请检查 SHOP_MODE 值是否为 NEAREST（<默认> 距离最近） 或 INVENTORY（库存最多） 或 空字符串（不选择其他店铺）"
                         )
                         # 如果 SHOP_MODE 值合法，则需要配合检测 PROVINCE 和 CITY 是否为空（接口需要用到这些值）
                     if not PROVINCE or not CITY:
