@@ -1,9 +1,9 @@
 """
-6、周末欢乐购
+8、"小茅好运"专场 - 2 月 28 日
 
-直接复用 日常预约商品的环境变量，找出 周末欢乐购 可预约的商品 和 日常预约的商品重合的商品 ID 进行预约。
-即 日常预约环境变量设置 A、B、C 商品，欢乐购可预约 B、D 商品，则脚本会自动筛选重合的 B 商品预约，D 商品不预约。
-店铺ID 和 缺货店铺相关配置沿用日常预约的。
+与 6_周末欢乐购 脚本不同，本脚本会预约本次专场内查询到的所有商品。
+由于专场预约无论选择多少商品，都会扣除 50 点小茅运，为最大化利益且提升中奖概率，本脚本将预约全部可查询商品。
+此外，这也能避免因环境变量未涵盖专场特殊商品而错过预约机会。
 
 通知：运行结果会调用青龙面板的通知渠道。
 
@@ -54,10 +54,10 @@ from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
 from notify import send
 
-# 每周星期天 15:05 开始预约
+# 每 2 月 28 日 20:05 开始预约
 '''
-cron: 5 15 * * 0
-new Env("6_周末欢乐购")
+cron: 5 20 28 2 *
+new Env("8_小茅好运专场-2月")
 '''
 
 # 创建 StringIO 对象
@@ -305,7 +305,7 @@ def get_session_id_items():
     current_timestamp = int(time.time() * 1000)
 
     # 发送请求
-    api_url = f"https://h5.moutai519.com.cn/xhr/front/mall/index/special/session/getByType/3?__timestamp={current_timestamp}&"
+    api_url = f"https://h5.moutai519.com.cn/xhr/front/mall/index/special/session/get?__timestamp={current_timestamp}&"
     response = requests.get(api_url)
     data = response.json()
     if data["code"] != 2000:
@@ -324,37 +324,20 @@ def get_session_id_items():
 def start(user, items_list):
     global session_id
 
-    # 筛选周末欢乐购可预约的商品和日常预约的商品重合的商品ID列表
-    weekend_product_id_list = []
-
     logging.info('--------------------------')
     logging.info(f"🧾 用户：{user['PHONE_NUMBER']}，开始预约商品")
 
-    # 筛选重合的商品 ID
     for item in items_list:
-        if item["itemCode"] in user["PRODUCT_ID_LIST"]:
-            weekend_product_id_list.append(item["itemCode"])
-
-    if not weekend_product_id_list:
-        logging.info(f"🚫 用户：{user['PHONE_NUMBER']}，找不到与日常预约重合的商品 ID，将不执行欢乐购！")
-        return
-    else:
-        logging.info(f"⚡ 筛选与日常预约重合的商品 ID：{weekend_product_id_list}")
-
-    if user["SHOP_ID"] == "AUTO":
-        logging.info(f"🏁 店铺 ID 为 AUTO，根据店铺模式 {user['SHOP_MODE']} 获取店铺 ID")
-
-    for product_id in weekend_product_id_list:
         shop_id = user["SHOP_ID"]
 
         # 判断 SHOP_ID 是否为 AUTO，如果是，则根据 SHOP_MODE 获取店铺 ID
         if user["SHOP_ID"] == "AUTO":
             shop_id = get_shop_id_by_mode(user["LAT"], user["LNG"],
                                           user["SHOP_MODE"], user["PROVINCE"],
-                                          user["CITY"], product_id)
-            logging.info(f"🚩 商品ID：{product_id}，获取店铺 ID（{shop_id}）成功")
+                                          user["CITY"], item["itemCode"])
+            logging.info(f"🚩 商品ID：{item['itemCode']}，获取店铺 ID（{shop_id}）成功")
 
-        reserve_product(itemId=product_id,
+        reserve_product(itemId=item["itemCode"],
                         shopId=shop_id,
                         sessionId=session_id,
                         userId=user["USER_ID"],
@@ -510,12 +493,13 @@ def get_shop_id_by_mode(lat, lng, shop_mode, province_name, city_name,
 
 if __name__ == "__main__":
     if not DEBUG:
-        # 判断当前时间是否是星期天的 15:00 到 16:00 期间
+        # 获取当前时间
         now = datetime.datetime.now()
-        if now.weekday() != 6 or now.hour < 15 or now.hour >= 16:
-            err_msg = "🚫 当前时间不在星期天的 15:00 到 16:00 期间，不执行预约"
-            logger.warning(err_msg)
-            send("i茅台周末欢乐购日志：", err_msg)
+        # 限定 2 月的 28 日 20:00 - 21:00 执行
+        if now.month != 2 or now.day != 28 or not (20 <= now.hour < 21):
+            err_msg = "🚫 当前时间不在 2 月 28 日 20:00 - 21:00 期间，不执行预约"
+            logging.warning(err_msg)
+            send("i茅台小茅好运专场日志：", err_msg)
             exit()
 
     # 生成时间戳
@@ -539,4 +523,4 @@ if __name__ == "__main__":
     logging.info(" ✅ 所有用户预约完成")
 
     log_contents = log_stream.getvalue()
-    send("i茅台周末欢乐购日志：", log_contents)
+    send("i茅台小茅好运专场日志：", log_contents)
