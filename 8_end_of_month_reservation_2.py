@@ -1,9 +1,7 @@
 """
 8、"小茅好运"专场 - 2 月 28 日
 
-与 6_周末欢乐购 脚本不同，本脚本会预约本次专场内查询到的所有商品。
-由于专场预约无论选择多少商品，都会扣除 50 点小茅运，为最大化利益且提升中奖概率，本脚本将预约全部可查询商品。
-此外，这也能避免因环境变量未涵盖专场特殊商品而错过预约机会。
+预约与环境变量设置的商品 ID 列表重合的，而不似主分支预约专场所有的商品。
 
 通知：运行结果会调用青龙面板的通知渠道。
 
@@ -311,6 +309,9 @@ def get_session_id_items():
     if data["code"] != 2000:
         raise Exception("🚫 获取 Session ID 和商品信息失败")
 
+    if "itemList" not in data["data"] or data["data"]["itemList"] is None:
+        raise Exception("🚫 可预约商品列表为空，请检查是否已到预约时间")
+
     # 解析响应
     sessionId = data["data"]["sessionId"]
     itemList = [{
@@ -327,17 +328,32 @@ def start(user, items_list):
     logging.info('--------------------------')
     logging.info(f"🧾 用户：{user['PHONE_NUMBER']}，开始预约商品")
 
+    # 筛选小茅好运可预约的商品和日常预约的商品重合的商品ID列表
+    filter_product_id_list = []
+
+    # 筛选重合的商品 ID
     for item in items_list:
+        if item["itemCode"] in user["PRODUCT_ID_LIST"]:
+            filter_product_id_list.append(item["itemCode"])
+
+    if not filter_product_id_list:
+        logging.info(
+            f"🚫 用户：{user['PHONE_NUMBER']}，找不到与日常预约重合的商品 ID，将不执行小茅好运专场！")
+        return
+    else:
+        logging.info(f"⚡ 筛选与日常预约重合的商品 ID：{filter_product_id_list}")
+
+    for product_id in filter_product_id_list:
         shop_id = user["SHOP_ID"]
 
         # 判断 SHOP_ID 是否为 AUTO，如果是，则根据 SHOP_MODE 获取店铺 ID
         if user["SHOP_ID"] == "AUTO":
             shop_id = get_shop_id_by_mode(user["LAT"], user["LNG"],
                                           user["SHOP_MODE"], user["PROVINCE"],
-                                          user["CITY"], item["itemCode"])
-            logging.info(f"🚩 商品ID：{item['itemCode']}，获取店铺 ID（{shop_id}）成功")
+                                          user["CITY"], product_id)
+            logging.info(f"🚩 商品ID：{product_id}，获取店铺 ID（{shop_id}）成功")
 
-        reserve_product(itemId=item["itemCode"],
+        reserve_product(itemId=product_id,
                         shopId=shop_id,
                         sessionId=session_id,
                         userId=user["USER_ID"],
