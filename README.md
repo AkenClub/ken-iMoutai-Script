@@ -4,9 +4,9 @@
 
 > 💌 温馨提示：
 >
-> 分支 feature/8-selective-booking 与主分支的区别：8\_"小茅好运"专场脚本只预约与环境变量设置的商品 ID 列表重合的，而不似主分支预约专场所有的商品。
+> 分支 feature_8_selective_booking 与主分支的区别：8\_"小茅好运"专场脚本只预约与环境变量设置的商品 ID 列表重合的，而不似主分支预约专场所有的商品。
 >
-> 在青龙面板创建订阅时候，分支请填写 feature/8-selective-booking
+> 在青龙面板创建订阅时候，分支请填写 feature_8_selective_booking
 
 ## 功能
 
