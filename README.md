@@ -2,12 +2,6 @@
 
 `ken-iMoutai-Script` 是一个青龙脚本，旨在自动化完成 i 茅台的预约申购、登录、短信验证码处理、耐力值和小茅运领取、旅行、周末欢乐购以及自动化选择店铺等功能。
 
-> 💌 温馨提示：
->
-> 分支 feature_8_selective_booking 与主分支的区别：8\_"小茅好运"专场脚本只预约与环境变量设置的商品 ID 列表重合的，而不似主分支预约专场所有的商品。
->
-> 在青龙面板创建订阅时候，分支请填写 feature_8_selective_booking
-
 ## 功能
 
 - **登录**
@@ -128,19 +122,19 @@
 
      - SHOP_ID: 店铺的唯一标识符。 --- 运行 3_retrieve_shop_and_product_info.py 获取
 
-       可**设置为 AUTO**，则根据 SHOP_MODE 的值来选择店铺 ID。
+       ​ 可**设置为 AUTO**，则根据 SHOP_MODE 的值来选择店铺 ID。
 
      - SHOP_MODE：店铺缺货模式，可选值为 **NEAREST**（距离最近）或 **INVENTORY**（库存最多）。设置该值时，需要同时设置 PROVINCE 和 CITY。
 
-       非必填，但 SHOP_ID 设置 AUTO 时为必填，需要同时设置 SHOP_MODE、PROVINCE 和 CITY。
+       ​ 非必填，但 SHOP_ID 设置 AUTO 时为必填，需要同时设置 SHOP_MODE、PROVINCE 和 CITY。
 
      - PROVINCE: 用户所在的省份。 --- 与 3_retrieve_shop_and_product_info.py 填写的省份一致
 
-       非必填，但 SHOP_MODE 设置为 NEAREST 或 INVENTORY 时为必填。
+       ​ 非必填，但 SHOP_MODE 设置为 NEAREST 或 INVENTORY 时为必填。
 
      - CITY: 用户所在的城市。 --- 与 3_retrieve_shop_and_product_info.py 填写的城市一致
 
-       非必填，但 SHOP_MODE 设置为 NEAREST 或 INVENTORY 时为必填。
+       ​ 非必填，但 SHOP_MODE 设置为 NEAREST 或 INVENTORY 时为必填。
 
      - LAT: 用户所在位置的纬度。 --- 运行 3_retrieve_shop_and_product_info.py 获取
      - LNG: 用户所在位置的经度。 --- 运行 3_retrieve_shop_and_product_info.py 获取
@@ -329,6 +323,12 @@
 4. **第三方服务**： 本项目的部分功能可能依赖于第三方服务或接口，这些服务的变更或不可用可能会影响脚本的正常工作。
 5. **学习和交流**： 本项目仅用于学习和交流目的，旨在帮助用户了解接口抓取和自动化处理的技术。请勿用于商业用途或其他非法活动。
 6. **责任声明**： 本项目作者不对因使用本脚本而产生的任何直接或间接损失负责。请用户在使用前充分理解相关风险，并确保合法合规使用。
+
+## 技术赞助
+
+本项目 CDN 加速及安全防护由 [Tencent EdgeOne](https://edgeone.ai/zh?from=github) 赞助
+
+[![EdgeOne Logo](https://edgeone.ai/media/34fe3a45-492d-4ea4-ae5d-ea1087ca7b4b.png)](https://edgeone.ai/zh?from=github)
 
 ## 许可证
 
