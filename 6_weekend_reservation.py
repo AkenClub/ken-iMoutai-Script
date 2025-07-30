@@ -266,6 +266,10 @@ def reserve_product(itemId, shopId, sessionId, userId, token, deviceId,
         result = response.json().get('data', {}).get('successDesc', "未知")
         logging.info(f"🛒 商品ID {itemId} ✅ 预约成功: {result}")
         return result
+    elif code == 4820:
+        message = response.json().get('data', {}).get('updateDesc', "API 可能限制了 APP 版本，可以尝试重新生成环境变量")
+        error_msg = f'🚫 预约失败: 错误码 {code}, 错误信息: {message}'
+        logging.error(f"🛒 商品ID {itemId} {error_msg}")
     else:
         message = response.json().get("message", "未知原因")
         error_msg = f'🚫 预约失败: 错误码 {code}, 错误信息: {message}'

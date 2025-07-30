@@ -193,7 +193,7 @@ def generate_headers(device_id, mt_version, token):
 
 
 # 查询申购结果
-def check_reservation_result( token, device_id, mt_version):
+def check_reservation_result(token, device_id, mt_version):
     global DEBUG
     try:
         url = f"https://app.moutai519.com.cn/xhr/front/mall/reservation/list/pageOne/queryV2"
@@ -202,7 +202,10 @@ def check_reservation_result( token, device_id, mt_version):
         response = requests.get(url, headers=headers)
         resultData = json.loads(response.text)
         resultCode = resultData.get("code")
-        if resultCode != 2000:
+        if resultCode == 4820:
+            message = resultData.get("data", {}).get("updateDesc", "API 可能限制了 APP 版本，可以尝试重新生成环境变量")
+            raise Exception(f"({resultCode}){message}")
+        elif resultCode != 2000:
             message = resultData.get("message")
             raise Exception(f"({resultCode}){message}")
 

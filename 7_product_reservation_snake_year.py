@@ -258,6 +258,10 @@ def reserve_product(itemId, shopId, sessionId, userId, token, deviceId,
         result = response.json().get('data', {}).get('successDesc', "未知")
         logging.info(f"🛒 商品ID {itemId} ✅ 预约成功: {result}")
         return result
+    elif code == 4820:
+        message = response.json().get('data', {}).get('updateDesc', "API 可能限制了 APP 版本，可以尝试重新生成环境变量")
+        error_msg = f'🚫 预约失败: 错误码 {code}, 错误信息: {message}'
+        logging.error(f"🛒 商品ID {itemId} {error_msg}")
     else:
         message = response.json().get("message", "未知原因")
         error_msg = f'🚫 预约失败: 错误码 {code}, 错误信息: {message}'
@@ -271,17 +275,20 @@ def get_snake_year_production_info():
     # 发送请求
     api_url = f"https://h5.moutai519.com.cn/xhr/front/mall/index/special/session/getByType/5?__timestamp={timestamp_today}"
     response = requests.get(api_url)
-    data = response.json()
-    if data["code"] != 2000:
+    code = response.json().get('code', 0)
+    data = response.json().get('data', {})
+    if code != 2000:
         raise Exception("🚫 获取蛇年茅台商品信息失败")
 
     # 解析响应
-    session_id = data["data"]["sessionId"]
-    item_list = data["data"]["itemList"]
+    session_id = data.get("sessionId", "")
+    item_list = data.get("itemList", [])
+    if not item_list:
+        raise Exception("🚫 获取蛇年茅台商品信息失败")
     # 商品 ID
-    product_id = item_list[0]["itemCode"]
+    product_id = item_list[0].get("itemCode", "")
     # 店铺信息
-    shop_info_list = item_list[0]["shopList"]
+    shop_info_list = item_list[0].get("shopList", [])
     return session_id, product_id, shop_info_list
 
 
