@@ -76,9 +76,14 @@ def get_mt_version():
         response.encoding = 'utf-8'  # 确保使用正确的编码
         html_content = response.text
 
-    # 使用正则表达式匹配版本号
+    # 使用正则表达式匹配版本号（已过时，这里只是作为兼容，避免又使用回这种规则）
     pattern = re.compile(r'new__latest__version">(.*?)</p>', re.DOTALL)
     match = pattern.search(html_content)
+
+    if not match:
+        # 新的匹配方式
+        pattern = re.compile(r'class="metadata[^"]*">\s*<h4[^>]*>(.*?)</h4>', re.DOTALL)
+        match = pattern.search(html_content)
 
     if match:
         mt_version = match.group(1).strip().replace('版本 ', '')  # 去掉前后的空白字符
